@@ -1,38 +1,524 @@
-—
-US & INTERNATIONAL MARKETS
-—
-frontpage.finance
-MARKETS • MACRO • INSIDER ACTIVITY • INSTITUTIONAL FILINGS • SEC ALERTS
-Loading markets
-MARKETS
-MACRO
-INSIDER TRADING
-INSTITUTIONAL
-SEC FILINGS
-LIVE
-US Markets
-LOADING...
-Loading...
-INTL
-International
-Loading...
-FRED
-Macro Indicators
-FEDERAL RESERVE DATA
-Loading...
-TREASURY
-Yield Curve
-Loading...
-SEC
-Insider Trading
-FORM 4 — RECENT FILINGS
-Loading insider filings...
-SEC
-8-K Filings
-MATERIAL EVENTS — RECENT
-Loading filings...
-13-F
-Institutional
-LATEST FILINGS
-Loading...
-FRONTPAGE.FINANCE — DATA: FINANCIAL MODELING PREP, FEDERAL RESERVE FRED, SEC EDGAR — NOT INVESTMENT ADVICE
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>frontpage.finance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0a;
+  --paper: #f5f2eb;
+  --rule: #c8c0b0;
+  --accent: #c41e1e;
+  --accent2: #1a3a6b;
+  --muted: #6b6560;
+  --up: #1a6b3a;
+  --down: #c41e1e;
+  --card: #ffffff;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+  --serif: 'Playfair Display', serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--paper); color: var(--ink); font-size: 14px; line-height: 1.5; }
+
+.masthead { border-bottom: 3px double var(--ink); padding: 16px 24px 12px; text-align: center; }
+.masthead-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; display: flex; justify-content: space-between; }
+.masthead h1 { font-family: var(--serif); font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+.masthead-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; border-top: 1px solid var(--rule); padding-top: 6px; }
+
+.ticker-wrap { background: var(--ink); color: var(--paper); overflow: hidden; padding: 6px 0; white-space: nowrap; }
+.ticker-inner { display: inline-block; animation: ticker 60s linear infinite; }
+.ticker-inner:hover { animation-play-state: paused; }
+.ticker-item { display: inline-block; margin-right: 40px; font-family: var(--mono); font-size: 11px; }
+.ticker-item .sym { color: #999; margin-right: 6px; }
+.ticker-item .val { color: white; margin-right: 4px; }
+.ticker-item .up { color: #4caf82; }
+.ticker-item .dn { color: #f08080; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+.section-nav { display: flex; border-bottom: 1px solid var(--rule); background: var(--card); overflow-x: auto; }
+.section-nav a { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 8px 18px; border-right: 1px solid var(--rule); white-space: nowrap; }
+.section-nav a:hover { background: var(--ink); color: var(--paper); }
+
+.page { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.grid-main { display: grid; grid-template-columns: 1fr 320px; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+@media (max-width: 900px) { .grid-main { grid-template-columns: 1fr; } }
+.col-main { border-right: 1px solid var(--rule); }
+
+.section-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 2px solid var(--ink); background: var(--card); }
+.section-head h2 { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; }
+.section-time { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-left: auto; }
+.section-label { font-family: var(--mono); font-size: 9px; background: var(--accent); color: white; padding: 2px 6px; letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.section-label.blue { background: var(--accent2); }
+
+.markets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.market-card { padding: 12px 14px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); background: var(--card); }
+.market-name { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.market-value { font-family: var(--mono); font-size: 1.1rem; font-weight: 500; margin-bottom: 2px; }
+.market-chg { font-family: var(--mono); font-size: 11px; }
+.up { color: var(--up); }
+.dn { color: var(--down); }
+.flat { color: var(--muted); }
+
+.intl-row { display: flex; overflow-x: auto; border-bottom: 1px solid var(--rule); background: #faf9f6; }
+.intl-item { flex-shrink: 0; padding: 8px 14px; border-right: 1px solid var(--rule); min-width: 130px; }
+.intl-name { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.intl-val { font-family: var(--mono); font-size: 12px; font-weight: 500; margin-top: 2px; }
+.intl-chg { font-family: var(--mono); font-size: 10px; }
+
+.macro-grid { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--card); }
+@media (max-width: 600px) { .macro-grid { grid-template-columns: repeat(2, 1fr); } }
+.macro-item { padding: 12px 14px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.macro-label { font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.macro-value { font-family: var(--mono); font-size: 1.3rem; font-weight: 500; }
+.macro-sub { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 2px; }
+.macro-delta { font-family: var(--mono); font-size: 10px; margin-top: 2px; }
+
+.yield-row { display: flex; align-items: center; gap: 8px; padding: 6px 14px; border-bottom: 1px solid #f0ece4; font-family: var(--mono); font-size: 11px; background: var(--card); }
+.yield-label { color: var(--muted); width: 36px; flex-shrink: 0; }
+.yield-bar-wrap { flex: 1; background: #eee; height: 6px; }
+.yield-bar { height: 6px; background: var(--accent2); }
+.yield-val { width: 52px; text-align: right; }
+
+.data-table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 12px; }
+.data-table thead th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--rule); background: #faf9f6; white-space: nowrap; }
+.data-table thead th.r { text-align: right; }
+.data-table tbody td { padding: 8px 12px; border-bottom: 1px solid #f0ece4; vertical-align: top; }
+.data-table tbody td.r { text-align: right; font-family: var(--mono); font-size: 11px; }
+.data-table tbody tr:hover td { background: #f5f2eb; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.row-title { font-weight: 600; font-size: 12px; }
+.row-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+.badge { display: inline-block; font-family: var(--mono); font-size: 9px; padding: 2px 6px; border: 1px solid; white-space: nowrap; }
+.badge-buy { background: #e8f5ee; color: var(--up); border-color: #b8dfc8; }
+.badge-neutral { background: #f0f0f0; color: var(--muted); border-color: #ddd; }
+.badge-blue { background: #eef2ff; color: var(--accent2); border-color: #c0ccee; }
+.sec-link { font-family: var(--mono); font-size: 9px; color: var(--accent2); text-decoration: none; }
+.sec-link:hover { text-decoration: underline; }
+.date-badge { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+
+.sidebar-item { padding: 10px 14px; border-bottom: 1px solid #f0ece4; background: var(--card); font-size: 12px; }
+.sidebar-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.sidebar-company { font-weight: 600; font-size: 12px; }
+.sidebar-meta { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+.loading-state { padding: 24px 16px; font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; }
+.error-state { padding: 12px 16px; font-family: var(--mono); font-size: 10px; color: var(--down); }
+
+.footer { border-top: 2px solid var(--ink); padding: 16px 24px; text-align: center; font-family: var(--mono); font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; background: var(--card); }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="masthead">
+    <div class="masthead-meta">
+      <span id="current-date"></span>
+      <span>US and International Markets</span>
+      <span id="current-time"></span>
+    </div>
+    <h1>frontpage.finance</h1>
+    <div class="masthead-sub">Markets / Macro / Insider Activity / Institutional Filings / SEC Alerts</div>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item"><span class="sym">Loading markets...</span></span>
+  </div>
+</div>
+
+<div class="page">
+  <nav class="section-nav">
+    <a href="#markets">Markets</a>
+    <a href="#macro">Macro</a>
+    <a href="#insider">Insider Trading</a>
+    <a href="#institutional">Institutional</a>
+    <a href="#filings">SEC Filings</a>
+  </nav>
+
+  <div class="grid-main">
+    <div class="col-main">
+
+      <div id="markets">
+        <div class="section-head">
+          <span class="section-label">Live</span>
+          <h2>US Markets</h2>
+          <span class="section-time" id="markets-time">Loading...</span>
+        </div>
+        <div class="markets-grid" id="us-markets"><div class="loading-state">Loading...</div></div>
+        <div class="section-head" style="border-top:1px solid var(--rule);">
+          <span class="section-label blue">Intl</span>
+          <h2>International</h2>
+        </div>
+        <div class="intl-row" id="intl-markets"><div class="loading-state">Loading...</div></div>
+      </div>
+
+      <div id="macro">
+        <div class="section-head">
+          <span class="section-label blue">FRED</span>
+          <h2>Macro Indicators</h2>
+          <span class="section-time">Federal Reserve Data</span>
+        </div>
+        <div class="macro-grid" id="macro-grid"><div class="loading-state" style="grid-column:1/-1;">Loading...</div></div>
+        <div class="section-head" style="border-top:1px solid var(--rule);">
+          <span class="section-label blue">Treasury</span>
+          <h2>Yield Curve</h2>
+        </div>
+        <div id="yield-curve"><div class="loading-state">Loading...</div></div>
+      </div>
+
+      <div id="insider">
+        <div class="section-head">
+          <span class="section-label">SEC</span>
+          <h2>Insider Trading</h2>
+          <span class="section-time">Form 4 - Recent Filings</span>
+        </div>
+        <div id="insider-container"><div class="loading-state">Loading insider filings...</div></div>
+      </div>
+
+      <div id="filings">
+        <div class="section-head">
+          <span class="section-label">SEC</span>
+          <h2>8-K Filings</h2>
+          <span class="section-time">Material Events</span>
+        </div>
+        <div id="filings-container"><div class="loading-state">Loading filings...</div></div>
+      </div>
+
+    </div>
+
+    <div class="col-side">
+      <div id="institutional">
+        <div class="section-head">
+          <span class="section-label blue">13-F</span>
+          <h2>Institutional</h2>
+          <span class="section-time">Latest Filings</span>
+        </div>
+        <div id="institutional-container"><div class="loading-state">Loading...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    frontpage.finance / Data: Financial Modeling Prep, Federal Reserve FRED, SEC EDGAR / Not investment advice
+  </div>
+</div>
+
+<script>
+var FMP = "Bi1zj0Qsyl4HdOd7IXbXxF1Gvjcx6LD7";
+var FRED = "7e7e9d23fcf25b5e530a6f40d4eaa58a";
+var PROXY = "https://api.allorigins.win/raw?url=";
+
+function updateClock() {
+  var now = new Date();
+  document.getElementById("current-date").textContent = now.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  document.getElementById("current-time").textContent = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZoneName: "short" });
+}
+updateClock();
+setInterval(updateClock, 60000);
+
+function fmtNum(n, d) {
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  return parseFloat(n).toLocaleString("en-US", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+}
+function fmtPct(n) {
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  var v = parseFloat(n);
+  return (v >= 0 ? "+" : "") + v.toFixed(2) + "%";
+}
+function chgClass(n) {
+  var v = parseFloat(n);
+  if (v > 0) return "up";
+  if (v < 0) return "dn";
+  return "flat";
+}
+function timeAgo(dateStr) {
+  var now = new Date();
+  var then = new Date(dateStr);
+  var diff = Math.floor((now - then) / 60000);
+  if (isNaN(diff) || diff < 0) return dateStr;
+  if (diff < 60) return diff + "m ago";
+  if (diff < 1440) return Math.floor(diff / 60) + "h ago";
+  return Math.floor(diff / 1440) + "d ago";
+}
+
+// ---- MARKETS ----
+async function loadUSMarkets() {
+  var container = document.getElementById("us-markets");
+  var timeEl = document.getElementById("markets-time");
+  try {
+    var res = await fetch("https://financialmodelingprep.com/api/v3/quotes/index?apikey=" + FMP);
+    var data = await res.json();
+    var wanted = {
+      "^GSPC": "S&P 500",
+      "^DJI": "Dow Jones",
+      "^IXIC": "Nasdaq",
+      "^RUT": "Russell 2000",
+      "^VIX": "VIX"
+    };
+    var map = {};
+    data.forEach(function(q) { map[q.symbol] = q; });
+
+    var results = [];
+    Object.keys(wanted).forEach(function(sym) {
+      results.push({ name: wanted[sym], data: map[sym] || null });
+    });
+
+    // Commodities
+    var res2 = await fetch("https://financialmodelingprep.com/api/v3/quotes/commodity?apikey=" + FMP);
+    var comm = await res2.json();
+    var cmap = {};
+    comm.forEach(function(q) { cmap[q.symbol] = q; });
+    var cwanted = { "GCUSD": "Gold", "CLUSD": "Crude Oil" };
+    Object.keys(cwanted).forEach(function(sym) {
+      results.push({ name: cwanted[sym], data: cmap[sym] || null });
+    });
+
+    // Forex
+    var res3 = await fetch("https://financialmodelingprep.com/api/v3/quotes/forex?apikey=" + FMP);
+    var fx = await res3.json();
+    var fmap = {};
+    fx.forEach(function(q) { fmap[q.symbol] = q; });
+    if (fmap["EURUSD"]) results.push({ name: "EUR/USD", data: fmap["EURUSD"] });
+
+    var html = "";
+    results.forEach(function(r) {
+      var d = r.data;
+      var pct = d ? d.changesPercentage : null;
+      var cls = d ? chgClass(pct) : "flat";
+      html += "<div class=\"market-card\">";
+      html += "<div class=\"market-name\">" + r.name + "</div>";
+      html += "<div class=\"market-value\">" + (d ? fmtNum(d.price, 2) : "--") + "</div>";
+      html += "<div class=\"market-chg " + cls + "\">" + (d ? fmtPct(pct) : "--") + "</div>";
+      html += "</div>";
+    });
+    container.innerHTML = html || "<div class='loading-state'>No data.</div>";
+    timeEl.textContent = "Updated " + new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+    buildTicker(results);
+  } catch(e) {
+    container.innerHTML = "<div class='error-state'>Markets unavailable: " + e.message + "</div>";
+    timeEl.textContent = "Error";
+  }
+}
+
+async function loadIntlMarkets() {
+  var container = document.getElementById("intl-markets");
+  try {
+    var res = await fetch("https://financialmodelingprep.com/api/v3/quotes/index?apikey=" + FMP);
+    var data = await res.json();
+    var wanted = {
+      "^FTSE": "FTSE 100",
+      "^GDAXI": "DAX",
+      "^FCHI": "CAC 40",
+      "^N225": "Nikkei 225",
+      "^HSI": "Hang Seng",
+      "^AXJO": "ASX 200",
+      "^BVSP": "Bovespa"
+    };
+    var map = {};
+    data.forEach(function(q) { map[q.symbol] = q; });
+    var html = "";
+    Object.keys(wanted).forEach(function(sym) {
+      var d = map[sym];
+      var pct = d ? d.changesPercentage : null;
+      var cls = d ? chgClass(pct) : "";
+      html += "<div class=\"intl-item\">";
+      html += "<div class=\"intl-name\">" + wanted[sym] + "</div>";
+      html += "<div class=\"intl-val " + cls + "\">" + (d ? fmtNum(d.price, 2) : "--") + "</div>";
+      html += "<div class=\"intl-chg " + cls + "\">" + (d ? fmtPct(pct) : "--") + "</div>";
+      html += "</div>";
+    });
+    container.innerHTML = html || "<div class='loading-state'>No data.</div>";
+  } catch(e) {
+    container.innerHTML = "<div class='error-state'>International markets unavailable.</div>";
+  }
+}
+
+function buildTicker(results) {
+  var items = results.map(function(r) {
+    var d = r.data;
+    var pct = d ? d.changesPercentage : null;
+    var cls = d ? chgClass(pct) : "";
+    return "<span class=\"ticker-item\"><span class=\"sym\">" + r.name + "</span><span class=\"val\">" + (d ? fmtNum(d.price, 2) : "--") + "</span><span class=\"" + cls + "\">" + (d ? fmtPct(pct) : "") + "</span></span>";
+  }).join("");
+  document.getElementById("tickerInner").innerHTML = items + items;
+}
+
+// ---- MACRO ----
+var FRED_SERIES = [
+  { id: "FEDFUNDS", label: "Fed Funds Rate", suffix: "%", desc: "Effective rate" },
+  { id: "CPIAUCSL", label: "CPI", suffix: "", desc: "Consumer Price Index" },
+  { id: "UNRATE", label: "Unemployment", suffix: "%", desc: "U-3 rate" },
+  { id: "GDP", label: "Real GDP", suffix: "B", desc: "Billions USD" },
+  { id: "M2SL", label: "M2 Money Supply", suffix: "T", desc: "Trillions USD", scale: 1000 },
+  { id: "MORTGAGE30US", label: "30yr Mortgage", suffix: "%", desc: "Weekly avg" }
+];
+var YIELD_SERIES = [
+  { id: "DGS1MO", label: "1M" }, { id: "DGS3MO", label: "3M" }, { id: "DGS6MO", label: "6M" },
+  { id: "DGS1", label: "1Y" }, { id: "DGS2", label: "2Y" }, { id: "DGS5", label: "5Y" },
+  { id: "DGS10", label: "10Y" }, { id: "DGS30", label: "30Y" }
+];
+
+async function fetchFRED(id) {
+  try {
+    var url = "https://api.stlouisfed.org/fred/series/observations?series_id=" + id + "&api_key=" + FRED + "&file_type=json&sort_order=desc&limit=2";
+    var res = await fetch(url);
+    var data = await res.json();
+    var obs = data.observations;
+    if (!obs || !obs.length) return null;
+    return { current: obs[0], prev: obs[1] || null };
+  } catch(e) { return null; }
+}
+
+async function loadMacro() {
+  var grid = document.getElementById("macro-grid");
+  var results = await Promise.all(FRED_SERIES.map(function(s) {
+    return fetchFRED(s.id).then(function(d) { return { s: s, d: d }; });
+  }));
+  var html = "";
+  results.forEach(function(r) {
+    var s = r.s; var d = r.d;
+    var val = d ? parseFloat(d.current.value) : null;
+    var prev = d && d.prev ? parseFloat(d.prev.value) : null;
+    var displayVal = "--";
+    var delta = "";
+    if (val !== null && !isNaN(val)) {
+      displayVal = s.scale ? (val / s.scale).toFixed(1) + s.suffix : val.toFixed(2) + s.suffix;
+      if (prev !== null && !isNaN(prev)) {
+        var diff = val - prev;
+        var sign = diff >= 0 ? "+" : "";
+        var cls = diff >= 0 ? "up" : "dn";
+        delta = "<div class=\"macro-delta " + cls + "\">" + sign + diff.toFixed(2) + " vs prior</div>";
+      }
+    }
+    html += "<div class=\"macro-item\">";
+    html += "<div class=\"macro-label\">" + s.label + "</div>";
+    html += "<div class=\"macro-value\">" + displayVal + "</div>";
+    html += "<div class=\"macro-sub\">" + s.desc + (d ? " / " + d.current.date : "") + "</div>";
+    html += delta + "</div>";
+  });
+  grid.innerHTML = html;
+}
+
+async function loadYieldCurve() {
+  var container = document.getElementById("yield-curve");
+  var results = await Promise.all(YIELD_SERIES.map(function(s) {
+    return fetchFRED(s.id).then(function(d) { return { label: s.label, val: d ? parseFloat(d.current.value) : null }; });
+  }));
+  var vals = results.map(function(r) { return r.val; }).filter(function(v) { return v !== null && !isNaN(v); });
+  var maxVal = vals.length ? Math.max.apply(null, vals) : 5;
+  var html = "";
+  results.forEach(function(r) {
+    var pct = r.val !== null && !isNaN(r.val) ? Math.max(4, (r.val / maxVal) * 100) : 0;
+    html += "<div class=\"yield-row\">";
+    html += "<span class=\"yield-label\">" + r.label + "</span>";
+    html += "<div class=\"yield-bar-wrap\"><div class=\"yield-bar\" style=\"width:" + pct + "%\"></div></div>";
+    html += "<span class=\"yield-val\">" + (r.val !== null && !isNaN(r.val) ? r.val.toFixed(2) + "%" : "--") + "</span>";
+    html += "</div>";
+  });
+  container.innerHTML = html;
+}
+
+// ---- SEC via CORS proxy ----
+async function fetchSECRSS(type) {
+  var secUrl = "https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=" + type + "&dateb=&owner=include&count=20&search_text=&output=atom";
+  var res = await fetch(PROXY + encodeURIComponent(secUrl));
+  var xml = await res.text();
+  var parser = new DOMParser();
+  return parser.parseFromString(xml, "application/xml").querySelectorAll("entry");
+}
+
+async function loadInsiderTrading() {
+  var container = document.getElementById("insider-container");
+  try {
+    var entries = await fetchSECRSS("4");
+    var html = "<table class=\"data-table\"><thead><tr><th>Filing</th><th class=\"r\">Type</th><th class=\"r\">Filed</th><th class=\"r\">Link</th></tr></thead><tbody>";
+    var count = 0;
+    entries.forEach(function(entry) {
+      if (count >= 20) return;
+      var title = entry.querySelector("title") ? entry.querySelector("title").textContent : "--";
+      var updated = entry.querySelector("updated") ? entry.querySelector("updated").textContent : "";
+      var link = entry.querySelector("link") ? entry.querySelector("link").getAttribute("href") : "#";
+      var parts = title.split(" - ");
+      html += "<tr><td><div class=\"row-title\" style=\"font-size:11px;\">" + (parts[0] || title) + "</div>";
+      if (parts[1]) html += "<div class=\"row-sub\">" + parts[1] + "</div>";
+      html += "</td><td class=\"r\"><span class=\"badge badge-buy\">FORM 4</span></td>";
+      html += "<td class=\"r\"><span class=\"date-badge\">" + (updated ? timeAgo(updated) : "--") + "</span></td>";
+      html += "<td class=\"r\"><a class=\"sec-link\" href=\"" + link + "\" target=\"_blank\">View</a></td></tr>";
+      count++;
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = "<div class=\"error-state\">Could not load. <a class=\"sec-link\" href=\"https://www.sec.gov/cgi-bin/browse-edgar?action=getcurrent&type=4\" target=\"_blank\">View on SEC.gov</a></div>";
+  }
+}
+
+async function load8KFilings() {
+  var container = document.getElementById("filings-container");
+  try {
+    var entries = await fetchSECRSS("8-K");
+    var html = "<table class=\"data-table\"><thead><tr><th>Company</th><th class=\"r\">Type</th><th class=\"r\">Filed</th><th class=\"r\">Link</th></tr></thead><tbody>";
+    var count = 0;
+    entries.forEach(function(entry) {
+      if (count >= 20) return;
+      var title = entry.querySelector("title") ? entry.querySelector("title").textContent : "--";
+      var updated = entry.querySelector("updated") ? entry.querySelector("updated").textContent : "";
+      var link = entry.querySelector("link") ? entry.querySelector("link").getAttribute("href") : "#";
+      var parts = title.split(" - ");
+      html += "<tr><td><div class=\"row-title\" style=\"font-size:11px;\">" + (parts[0] || title) + "</div></td>";
+      html += "<td class=\"r\"><span class=\"badge badge-neutral\">" + (parts[1] || "8-K") + "</span></td>";
+      html += "<td class=\"r\"><span class=\"date-badge\">" + (updated ? timeAgo(updated) : "--") + "</span></td>";
+      html += "<td class=\"r\"><a class=\"sec-link\" href=\"" + link + "\" target=\"_blank\">View</a></td></tr>";
+      count++;
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = "<div class=\"error-state\">Could not load 8-K filings.</div>";
+  }
+}
+
+async function loadInstitutional() {
+  var container = document.getElementById("institutional-container");
+  try {
+    var entries = await fetchSECRSS("13F-HR");
+    var html = "";
+    var count = 0;
+    entries.forEach(function(entry) {
+      if (count >= 15) return;
+      var title = entry.querySelector("title") ? entry.querySelector("title").textContent : "--";
+      var updated = entry.querySelector("updated") ? entry.querySelector("updated").textContent : "";
+      var link = entry.querySelector("link") ? entry.querySelector("link").getAttribute("href") : "#";
+      var parts = title.split(" - ");
+      html += "<div class=\"sidebar-item\">";
+      html += "<div class=\"sidebar-head\"><div class=\"sidebar-company\">" + (parts[0] || title) + "</div>";
+      html += "<span class=\"badge badge-blue\" style=\"flex-shrink:0;\">13-F</span></div>";
+      html += "<div class=\"sidebar-meta\">" + (updated ? timeAgo(updated) : "--") + " / <a class=\"sec-link\" href=\"" + link + "\" target=\"_blank\">Filing</a></div>";
+      html += "</div>";
+      count++;
+    });
+    container.innerHTML = html || "<div class=\"loading-state\">No recent 13-F filings.</div>";
+  } catch(e) {
+    container.innerHTML = "<div class=\"error-state\">Could not load institutional filings.</div>";
+  }
+}
+
+// ---- INIT ----
+loadUSMarkets();
+loadIntlMarkets();
+loadMacro();
+loadYieldCurve();
+loadInsiderTrading();
+load8KFilings();
+loadInstitutional();
+setInterval(function() { loadUSMarkets(); loadIntlMarkets(); }, 300000);
+</script>
+</body>
+</html>
